@@ -8,7 +8,7 @@ on:
       BUILD_IMAGE:
         required: true
         type: string
-      BUILD_SECRET:
+      BUILD_SECRETS:
         required: true
         type: string
 
