@@ -21,7 +21,7 @@ jobs:
       - name: test-step
         run: |
           echo "Hello World"
-          echo "Hello ${{inputs.username}}"
+          echo "Hello ${{inputs.BUILD_IMAGE}}"
           echo "Access Key ${{ secrets.ARBITRARY_SECRET }}"
 
       - name: Configure AWS credentials
