@@ -1,0 +1,26 @@
+name: reuseable-workflow
+on:
+  workflow_call:
+    inputs:
+      username:
+        required: true
+        type: string
+
+
+jobs:
+  reusable_workflow_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: test-step
+        run: |
+          echo "Hello World"
+          echo "Hello ${{inputs.username}}"
+          echo "Access Key ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_EXPERIMENTAL }}
+          aws-region: us-east-2
