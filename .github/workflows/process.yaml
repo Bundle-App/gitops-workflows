@@ -5,6 +5,12 @@ on:
       username:
         required: true
         type: string
+      BUILD_IMAGE:
+        required: true
+        type: string
+      BUILD_SECRET:
+        required: true
+        type: string
 
 
 jobs:
@@ -16,7 +22,7 @@ jobs:
         run: |
           echo "Hello World"
           echo "Hello ${{inputs.username}}"
-          echo "Access Key ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}"
+          echo "Access Key ${{ secrets.ARBITRARY_SECRET }}"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
