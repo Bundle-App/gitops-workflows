@@ -28,8 +28,14 @@ on:
 jobs:
   reusable_workflow_job:
     runs-on: ubuntu-latest
+    
 
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+        
       - name: test-step
         run: |
           echo "Hello World"
