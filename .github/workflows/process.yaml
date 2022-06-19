@@ -1,4 +1,6 @@
 name: reuseable-workflow
+env:
+  AWS_REGION: us-east-2
 on:
   workflow_call:
     inputs:
@@ -23,7 +25,7 @@ jobs:
         run: |
           echo "Hello World"
           echo "Hello ${{inputs.SSM_PARAMS}}"
-          echo "Access Key ${{ secrets.ARBITRARY_SECRET }}"
+          echo "Access Key ${{ secrets.ARBITRARY_SECRET }}" 
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -31,3 +33,42 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_EXPERIMENTAL }}
           aws-region: us-east-2
+
+      - name: aws-ssm-to-env
+        uses: bomb-on/aws-ssm-to-env@master
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_EXPERIMENTAL }}
+        with:
+          ssm_parameter_list: ${{inputs.SSM_PARAMS}}
+          prefix: PLAIN_
+
+  
+
+      - name: Plain Env Variables
+        if: ${{ env.BUILD_SECRETS == 'yes' }}
+        id: compose-envs
+        run: |
+
+            plains=""
+            for var in "${!PLAIN_@}";
+            do
+              VALUE=${!var}
+              k=${var:6}
+              
+              KEY=$(echo "$k" | tr -d '[:space:]')
+            
+
+              echo -n "$VALUE" > "$KEY"
+
+            
+              plains="${plains}\"${KEY}\","  ## Build JSON array of plain keys
+          
+            done
+            plains=${plains::-1} ##remove last comma
+            plains="[${plains}]"
+            
+            
+            echo "$plains"
+            echo ::set-output name=PLAIN_ARRAY::$plains
