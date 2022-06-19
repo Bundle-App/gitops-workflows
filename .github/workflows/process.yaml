@@ -11,9 +11,15 @@ on:
       BUILD_SECRETS:
         required: true
         type: string
-      SSM_PARAMS:
+      SSM_VALUES:
         required: false
         type: string
+
+    outputs:
+      SSM_PARAMS:
+        description: "The first output string"
+        value: ${{ jobs.compose_envs.outputs.PLAIN_ARRAY }}
+
 
 
 jobs:
@@ -61,6 +67,8 @@ jobs:
             
 
               echo -n "$VALUE" > "$KEY"
+
+              echo "$VALUE" > value.txt
 
             
               plains="${plains}\"${KEY}\","  ## Build JSON array of plain keys
