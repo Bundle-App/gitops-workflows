@@ -129,12 +129,14 @@ jobs:
               VALUE=${!var}
               k=${var:7}
 
-              echo "$VALUE";
+            
               
               KEY=$(echo "$k" | tr -d '[:space:]')
               #KEY="${KEY}-${git_hash}"
 
               echo -n "$VALUE" > "$KEY"
+
+              echo "A key $KEY"
 
           
               kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
