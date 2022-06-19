@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-        
+
       - name: test-step
         run: |
           echo "Hello World"
@@ -147,8 +147,8 @@ jobs:
 
             #Cleanup files
 
-            rm -f list.txt
-            rm -f cert.pem
+            #rm -f list.txt
+            #rm -f cert.pem
             secrets=${secrets::-1} ##remove last comma
             secrets="[${secrets}]"
             
