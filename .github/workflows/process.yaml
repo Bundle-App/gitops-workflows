@@ -12,10 +12,10 @@ on:
         required: true
         type: string
       SSM_PARAMS:
-        required: false
+        required: true
         type: string
       SSM_SECRETS:
-        required: false
+        required: true
         type: string
 
     outputs:
@@ -127,6 +127,8 @@ jobs:
             do
               VALUE=${!var}
               k=${var:7}
+
+              echo "$VALUE";
               
               KEY=$(echo "$k" | tr -d '[:space:]')
               #KEY="${KEY}-${git_hash}"
