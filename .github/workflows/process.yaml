@@ -96,7 +96,7 @@ jobs:
 
       - name: Install Kubeseal & Kubectl
    
-        if: ${{ env.BUILD_SECRETS == 'yes' }}
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         run: |
             #Install kubeseal
             brew update
@@ -104,7 +104,7 @@ jobs:
             brew install kubectl
       
       - name: Compose Secrets 
-        if: ${{ env.BUILD_SECRETS == 'yes' }}
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         id: compose-secrets 
         env:
           KUBESEAL_CERT: ${{ secrets.KUBESEAL_CERT }}
