@@ -11,12 +11,12 @@ on:
       BUILD_SECRETS:
         required: true
         type: string
-      SSM_VALUES:
+      SSM_PARAMS:
         required: false
         type: string
 
     outputs:
-      SSM_PARAMS:
+      SSM_VALUES:
         description: "The first output string"
         value: ${{ jobs.compose_envs.outputs.PLAIN_ARRAY }}
 
