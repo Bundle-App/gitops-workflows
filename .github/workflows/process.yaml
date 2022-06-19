@@ -2,9 +2,7 @@ name: reuseable-workflow
 on:
   workflow_call:
     inputs:
-      username:
-        required: true
-        type: string
+ 
       BUILD_IMAGE:
         required: true
         type: string
