@@ -87,7 +87,7 @@ jobs:
 
               echo -n "$VALUE" > "$KEY"
 
-              echo "$VALUE" > value.txt
+              echo "Doing $VALUE" > value.txt
 
             
               plains="${plains}\"${KEY}\","  ## Build JSON array of plain keys
