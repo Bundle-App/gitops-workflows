@@ -47,7 +47,7 @@ jobs:
   
 
       - name: Plain Env Variables
-        if: ${{ env.BUILD_SECRETS == 'yes' }}
+        if: ${{ input.BUILD_SECRETS == 'yes' }}
         id: compose-envs
         run: |
 
