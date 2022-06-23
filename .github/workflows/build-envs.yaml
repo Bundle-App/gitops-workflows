@@ -18,16 +18,19 @@ on:
     outputs:
       ENV_VALUES:
         description: "The first output string"
-        value: ${{ jobs.compose_envs.outputs.PLAIN_ARRAY }}
+        value: ${{ jobs.build-envs.outputs.PLAIN_ARRAY }}
       SECRET_YAMLS:
         description: "Array of Base64 Encoded YAML files for secrets"
-        value: ${{ jobs.compose-secrets.outputs.YAMLS_ARRAY }}
+        value: ${{ jobs.build-envs.outputs.YAMLS_ARRAY }}
 
 
 jobs:
-  reusable_workflow_job:
+  build-envs:
     runs-on: ubuntu-latest
-    
+    outputs:
+      PLAIN_ARRAY: ${{ steps.compose_envs.outputs.PLAIN_ARRAY }}
+      YAMLS_ARRAY: ${{ steps.compose_envs.outputs.YAMLS_ARRAY }}
+        
 
     steps:
 
