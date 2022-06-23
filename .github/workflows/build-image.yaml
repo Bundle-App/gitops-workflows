@@ -4,6 +4,9 @@ env:
 on:
   workflow_call:
     inputs:
+      BUILD_IMAGE:
+        required: false
+        type: string
       BUILD_ARGS:
         required: false
         type: string
@@ -41,12 +44,12 @@ jobs:
           aws-region: us-east-2
 
       - name: Login to Amazon ECR
-        if: ${{ env.BUILD_IMAGE == 'yes' }}
+        if: ${{ inputs.BUILD_IMAGE== 'yes' }}
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image to Amazon ECR
-        if: ${{ env.BUILD_IMAGE == 'yes' }}
+        if: ${{ inputs.BUILD_IMAGE== 'yes' }}
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
