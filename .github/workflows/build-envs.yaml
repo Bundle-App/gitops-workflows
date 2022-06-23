@@ -5,12 +5,7 @@ on:
   workflow_call:
     inputs:
  
-      BUILD_IMAGE:
-        required: true
-        type: string
-      BUILD_SECRETS:
-        required: true
-        type: string
+
       SSM_PARAMS:
         required: true
         type: string
@@ -75,7 +70,7 @@ jobs:
   
 
       - name: Plain Env Variables
-        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        #if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         id: compose-envs
         run: |
 
@@ -105,7 +100,7 @@ jobs:
 
       - name: Install Kubeseal & Kubectl
    
-        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        #if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         run: |
             #Install kubeseal
             brew update
@@ -113,7 +108,7 @@ jobs:
             brew install kubectl
       
       - name: Compose Secrets 
-        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        #if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         id: compose-secrets 
         env:
           KUBESEAL_CERT: ${{ secrets.KUBESEAL_CERT }}
