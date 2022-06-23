@@ -144,7 +144,7 @@ jobs:
               # rm -f "$KEY".txt
             
               secrets="${secrets}\"${KEY}\","  ## Build JSON array of secret keys
-              YAMLS= "${YAMLS}\"${KEY}\":\"${SECRET_YAML}\","
+              YAMLS="${YAMLS}\"${KEY}\":\"${SECRET_YAML}\","
           
             done
 
