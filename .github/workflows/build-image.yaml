@@ -55,7 +55,7 @@ jobs:
         run: |
           # Build a docker container and push it to ECR
 
-          echo "Hello ${{inputs.ENV_SECRETS}"
+          echo "Hello ${{inputs.ENV_SECRETS}}"
           
           # git_hash=$(git rev-parse --short "$GITHUB_SHA")
           # docker build --build-arg GITHUB_TOKEN --build-arg GITHUB_PACKAGE_REPO  -t $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$ECR_REPOSITORY:${GITHUB_REF##*/}-$git_hash .
