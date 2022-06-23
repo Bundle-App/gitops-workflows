@@ -4,7 +4,9 @@ env:
 on:
   workflow_call:
     inputs:
- 
+      BUILD_SECRETS:
+        required: true
+        type: string
 
       SSM_PARAMS:
         required: true
@@ -57,8 +59,9 @@ jobs:
           ssm_parameter_list: ${{inputs.SSM_PARAMS}}
           prefix: PLAIN_
 
-      - name: aws-ssecrets-to-env
+      - name: aws-secrets-to-env
         uses: bomb-on/aws-ssm-to-env@master
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
@@ -70,7 +73,7 @@ jobs:
   
 
       - name: Plain Env Variables
-        #if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         id: compose-envs
         run: |
 
@@ -100,7 +103,7 @@ jobs:
 
       - name: Install Kubeseal & Kubectl
    
-        #if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         run: |
             #Install kubeseal
             brew update
@@ -108,7 +111,7 @@ jobs:
             brew install kubectl
       
       - name: Compose Secrets 
-        #if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         id: compose-secrets 
         env:
           KUBESEAL_CERT: ${{ secrets.KUBESEAL_CERT }}
