@@ -21,7 +21,7 @@ on:
         value: ${{ jobs.compose_envs.outputs.PLAIN_ARRAY }}
       SECRET_YAMLS:
         description: "Array of Base64 Encoded YAML files for secrets"
-        value: ${{ jobs.compose_secrets.outputs.YAMLS_ARRAY }}
+        value: ${{ jobs.compose-secrets.outputs.YAMLS_ARRAY }}
 
 
 jobs:
