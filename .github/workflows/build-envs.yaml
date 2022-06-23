@@ -1,0 +1,169 @@
+name: build-envs-reuseable-workflow
+env:
+  AWS_REGION: us-east-2
+on:
+  workflow_call:
+    inputs:
+ 
+      BUILD_IMAGE:
+        required: true
+        type: string
+      BUILD_SECRETS:
+        required: true
+        type: string
+      SSM_PARAMS:
+        required: true
+        type: string
+      SSM_SECRETS:
+        required: true
+        type: string
+
+    outputs:
+      SSM_VALUES:
+        description: "The first output string"
+        value: ${{ jobs.compose_envs.outputs.PLAIN_ARRAY }}
+      SECRET_YAMLS:
+        description: "Array of Base64 Encoded YAML files for secrets"
+        value: ${{ jobs.compose_secrets.outputs.PLAIN_ARRAY }}
+
+
+jobs:
+  reusable_workflow_job:
+    runs-on: ubuntu-latest
+    
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+
+      - name: test-step
+        run: |
+          echo "Hello World"
+          echo "Hello ${{inputs.SSM_PARAMS}}"
+          echo "Access Key ${{ secrets.ARBITRARY_SECRET }}" 
+          touch test.txt
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_EXPERIMENTAL }}
+          aws-region: us-east-2
+
+      - name: aws-ssm-to-env
+        uses: bomb-on/aws-ssm-to-env@master
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_EXPERIMENTAL }}
+        with:
+          ssm_parameter_list: ${{inputs.SSM_PARAMS}}
+          prefix: PLAIN_
+
+      - name: aws-ssecrets-to-env
+        uses: bomb-on/aws-ssm-to-env@master
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_EXPERIMENTAL }}
+        with:
+          ssm_parameter_list: ${{inputs.SSM_SECRETS}}
+          prefix: SECRET_
+
+  
+
+      - name: Plain Env Variables
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        id: compose-envs
+        run: |
+
+            plains=""
+            for var in "${!PLAIN_@}";
+            do
+              VALUE=${!var}
+              k=${var:6}
+              
+              KEY=$(echo "$k" | tr -d '[:space:]')
+            
+
+              echo -n "$VALUE" > "$KEY"
+
+              echo "Doing $VALUE" > value.txt
+
+            
+              plains="${plains}\"${KEY}\","  ## Build JSON array of plain keys
+          
+            done
+            plains=${plains::-1} ##remove last comma
+            plains="[${plains}]"
+            
+            
+            echo "$plains"
+            echo ::set-output name=PLAIN_ARRAY::$plains
+
+      - name: Install Kubeseal & Kubectl
+   
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        run: |
+            #Install kubeseal
+            brew update
+            brew install kubeseal
+            brew install kubectl
+      
+      - name: Compose Secrets 
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        id: compose-secrets 
+        env:
+          KUBESEAL_CERT: ${{ secrets.KUBESEAL_CERT }}
+        run: |
+            #Get secrets from env 
+
+            compgen -A variable | grep SECRET > list.txt
+
+            echo -n  $KUBESEAL_CERT | base64 -d > cert.pem
+            secrets=""
+            YAMLS=""
+            
+            git_hash=$(git rev-parse --short "$GITHUB_SHA")
+            for var in "${!SECRET_@}";
+            do
+              VALUE=${!var}
+              k=${var:7}
+
+            
+              
+              KEY=$(echo "$k" | tr -d '[:space:]')
+              #KEY="${KEY}-${git_hash}"
+
+              echo -n "$VALUE" > "$KEY"
+
+              SECRET_YAML = $(kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml | base64 )
+
+          
+              # kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
+              # rm -f "$KEY".txt
+            
+              secrets="${secrets}\"${KEY}\","  ## Build JSON array of secret keys
+              YAMLS= "${YAMLS}\"${KEY}\":\"${SECRET_YAML}\","
+          
+            done
+
+
+
+
+
+            #Cleanup files
+
+            rm -f list.txt
+            rm -f cert.pem
+            secrets=${secrets::-1} ##remove last comma
+            YAMLS=${YAMLS::-1} ##remove last comma
+            secrets="[${secrets}]"
+            YAMLS="[${YAMLS}]"
+            
+            
+            echo "$YAMLS"
+            echo ::set-output name=SECRET_ARRAY::$secrets
+             echo ::set-output name=SYAMLS_ARRAY::$YAMLS
