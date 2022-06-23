@@ -16,6 +16,9 @@ on:
         type: string
 
     outputs:
+      ECR_IMAGE:
+          description: "Ecr Image"
+          value: ${{ jobs.build_image.outputs.image }}
   
 
 
