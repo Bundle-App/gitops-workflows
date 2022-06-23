@@ -28,8 +28,8 @@ jobs:
   build-envs:
     runs-on: ubuntu-latest
     outputs:
-      PLAIN_ARRAY: ${{ steps.compose_envs.outputs.PLAIN_ARRAY }}
-      YAMLS_ARRAY: ${{ steps.compose_envs.outputs.YAMLS_ARRAY }}
+      PLAIN_ARRAY: ${{ steps.compose-envs.outputs.PLAIN_ARRAY }}
+      YAMLS_ARRAY: ${{ steps.compose-secrets.outputs.YAMLS_ARRAY }}
         
 
     steps:
