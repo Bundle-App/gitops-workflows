@@ -137,7 +137,7 @@ jobs:
 
               echo -n "$VALUE" > "$KEY"
 
-              SECRET_YAML = $(kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml | base64 )
+              SECRET_YAML=$(kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml | base64 )
 
           
               # kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
