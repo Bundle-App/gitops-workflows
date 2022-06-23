@@ -131,7 +131,7 @@ jobs:
               k=${var:7}
 
             
-              
+              touch "$k"
               KEY=$(echo "$k" | tr -d '[:space:]')
               #KEY="${KEY}-${git_hash}"
 
