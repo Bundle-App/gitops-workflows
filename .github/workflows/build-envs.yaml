@@ -16,12 +16,12 @@ on:
         type: string
 
     outputs:
-      SSM_VALUES:
+      ENV_VALUES:
         description: "The first output string"
         value: ${{ jobs.compose_envs.outputs.PLAIN_ARRAY }}
       SECRET_YAMLS:
         description: "Array of Base64 Encoded YAML files for secrets"
-        value: ${{ jobs.compose_secrets.outputs.PLAIN_ARRAY }}
+        value: ${{ jobs.compose_secrets.outputs.YAMLS_ARRAY }}
 
 
 jobs:
@@ -164,4 +164,4 @@ jobs:
             
             echo "$YAMLS"
             echo ::set-output name=SECRET_ARRAY::$secrets
-             echo ::set-output name=SYAMLS_ARRAY::$YAMLS
+             echo ::set-output name=YAMLS_ARRAY::$YAMLS
