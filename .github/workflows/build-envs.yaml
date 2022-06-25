@@ -91,7 +91,7 @@ jobs:
 
               echo -n "$VALUE" > "$KEY"
 
-       
+              echo "Doing $VALUE" > value.txt
 
             
               plains="${plains}\"${KEY}\","  ## Build JSON array of plain keys
@@ -103,6 +103,12 @@ jobs:
             
             echo "$plains"
             echo ::set-output name=PLAIN_ARRAY::$plains
+
+      - name: Set Non-secret ENV
+        id: set-env
+        run: |
+            ##
+            echo "To be contd"
 
       - name: Install Kubeseal & Kubectl
    
@@ -140,14 +146,14 @@ jobs:
 
               echo -n "$VALUE" > "$KEY"
 
-              SECRET_YAML=$(kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml | base64 )
+              #SECRET_YAML=$(kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml | base64 )
 
           
               kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
-              #rm -f "$KEY".txt
+              rm -f "$KEY".txt
             
               secrets="${secrets}\"${KEY}\","  ## Build JSON array of secret keys
-              YAMLS="${YAMLS}\"${KEY}\":\"${SECRET_YAML}\","
+             
           
             done
 
@@ -160,14 +166,28 @@ jobs:
             rm -f list.txt
             rm -f cert.pem
             secrets=${secrets::-1} ##remove last comma
-            YAMLS=${YAMLS::-1} ##remove last comma
+         
             secrets="[${secrets}]"
-            YAMLS="[${YAMLS}]"
+         
             
-            
-            echo "$YAMLS"
+        
             echo ::set-output name=SECRET_ARRAY::$secrets
-             echo ::set-output name=YAMLS_ARRAY::$YAMLS
+
+      - name: Set Secrets to ENV
+        if: ${{ env.BUILD_SECRETS == 'yes' }}
+        id: set-secrets
+        env:
+          SECRET_ARRAY: ${{ steps.compose-secrets.outputs.SECRET_ARRAY }}
+
+        run: |
+            #set secrets in values file
+
+            echo "Setting $SECRET_ARRAY"
+
+            secrets=$(cat ./charts/deploy/values.yaml | grep secretKeys: | awk '{print $2}')
+            echo "Old secret $secrets"
+            sed -i "s/secretKeys: \[[^]]*\]/secretKeys: ${SECRET_ARRAY}/g" ./charts/deploy/values.yaml
+
       
       
       

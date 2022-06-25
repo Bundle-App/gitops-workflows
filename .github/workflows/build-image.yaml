@@ -11,12 +11,7 @@ on:
         required: false
         type: string
 
-      ENV_PARAMS:
-        required: true
-        type: string
-      ENV_SECRETS:
-        required: true
-        type: string
+
 
     outputs:
       ECR_IMAGE:
