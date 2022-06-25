@@ -91,7 +91,7 @@ jobs:
 
               echo -n "$VALUE" > "$KEY"
 
-              echo "Doing $VALUE" > value.txt
+       
 
             
               plains="${plains}\"${KEY}\","  ## Build JSON array of plain keys
@@ -143,8 +143,8 @@ jobs:
               SECRET_YAML=$(kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml | base64 )
 
           
-              # kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
-              # rm -f "$KEY".txt
+              kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
+              #rm -f "$KEY".txt
             
               secrets="${secrets}\"${KEY}\","  ## Build JSON array of secret keys
               YAMLS="${YAMLS}\"${KEY}\":\"${SECRET_YAML}\","
@@ -168,3 +168,12 @@ jobs:
             echo "$YAMLS"
             echo ::set-output name=SECRET_ARRAY::$secrets
              echo ::set-output name=YAMLS_ARRAY::$YAMLS
+      
+      
+      
+      - name: write
+        uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+          BRANCH_NAME: 'experimental' #optional defaults to master
+   
