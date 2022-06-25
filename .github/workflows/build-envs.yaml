@@ -167,7 +167,7 @@ jobs:
             echo ::set-output name=SECRET_ARRAY::$secrets
 
       - name: Set Secrets to ENV
-        if: ${{ env.BUILD_SECRETS == 'yes' }}
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         id: set-secrets
         env:
           SECRET_ARRAY: ${{ steps.compose-secrets.outputs.SECRET_ARRAY }}
