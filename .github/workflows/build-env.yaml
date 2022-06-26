@@ -106,7 +106,7 @@ jobs:
 
           
             
-              plains="${plains}\"${KEY}\","  ## Build JSON array of plain keys
+              plains="${plains}\"${KEY}\":\"${VALUE}\","  ## Build JSON array of plain keys and values
           
             done
             plains=${plains::-1} ##remove last comma
@@ -119,9 +119,11 @@ jobs:
       - name: Set Non-secret ENV
         id: set-env
         if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        env:
+          PLAIN_ARRAY: ${{ steps.compose-envs.outputs.PLAIN_ARRAY }}
         run: |
             ##
-            echo "To be contd"
+            echo "To be contd ${PlAIN_ARRAY} "
 
       - name: Install Kubeseal & Kubectl
    
