@@ -19,8 +19,6 @@ on:
           value: ${{ jobs.build_image.outputs.image }}
   
 
-
-
 jobs:
   reusable_workflow_job:
     runs-on: ubuntu-latest
@@ -57,11 +55,21 @@ jobs:
         run: |
           # Build a docker container and push it to ECR
 
-          #echo "Hello ${ENV_SECRETS}"
-          
-          # git_hash=$(git rev-parse --short "$GITHUB_SHA")
-          # docker build --build-arg GITHUB_TOKEN --build-arg GITHUB_PACKAGE_REPO  -t $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$ECR_REPOSITORY:${GITHUB_REF##*/}-$git_hash .
-          # echo "Pushing image to ECR..."
-          # docker push $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$ECR_REPOSITORY:${GITHUB_REF##*/}-$git_hash
-          # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$ECR_REPOSITORY:${GITHUB_REF##*/}-$git_hash"
+          git_hash=$(git rev-parse --short "$GITHUB_SHA")
+          docker build --build-arg GITHUB_TOKEN --build-arg GITHUB_PACKAGE_REPO  -t $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$ECR_REPOSITORY:${GITHUB_REF##*/}-$git_hash .
+          echo "Pushing image to ECR..."
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$ECR_REPOSITORY:${GITHUB_REF##*/}-$git_hash
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$ECR_REPOSITORY:${GITHUB_REF##*/}-$git_hash"
 
+      - name: Update Version
+        if: ${{ env.BUILD_IMAGE == 'yes' }}
+        run: |
+            git_hash=$(git rev-parse --short "$GITHUB_SHA")
+            version=$(cat ./charts/deploy/values.yaml | grep version: | awk '{print $2}')
+            sed -i "s/$version/${GITHUB_REF##*/}-$git_hash/" ./charts/deploy/values.yaml
+
+      - name: write
+        uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+          BRANCH_NAME: 'experimental' #optional defaults to master

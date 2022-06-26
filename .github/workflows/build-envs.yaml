@@ -212,3 +212,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
           BRANCH_NAME: 'experimental' #optional defaults to master
    
+
+
+      
+
+
+  build-image:
+    
+    needs: build-envs
+    uses: ./build-image.yaml@experimental
+
+    with:
+    
+      BUILD_IMAGE: yes #You may not need to build the image every time yes/no 
+
+    secrets: inherit
+      # AWS_ACCESS_KEY_EXPERIMENTAL: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
+        # AWS_SECRET_KEY_EXPERIMENTAL: ${{ secrets.AWS_SECRET_KEY_EXPERIMENTAL }}
