@@ -116,14 +116,30 @@ jobs:
             echo "$plains"
             echo ::set-output name=PLAIN_ARRAY::$plains
 
-      - name: Set Non-secret ENV
+      - name: Set Array to JSON
         id: set-env
         if: ${{ inputs.BUILD_ENVS == 'yes' }}
         env:
           PLAIN_ARRAY: ${{ steps.compose-envs.outputs.PLAIN_ARRAY }}
         run: |
             ##
-            echo "To be contd ${PlAIN_ARRAY} "
+            echo "${PLAIN_ARRAY} " > plain.json
+      
+      - name: Build yaml file
+        if: ${{ inputs.BUILD_ENVS == 'yes' }}
+        id: build-yaml
+        uses: fabasoad/yaml-json-xml-converter-action@main
+        with:
+          path: 'plain.json'
+          from: 'json'
+          to: 'yaml'
+
+      - name: Set YAML
+        id: set-yaml
+        if: ${{ inputs.BUILD_ENVS == 'yes' }}
+        run: |
+            ##
+            echo "${{steps.build-yaml.outputs.data}}"
 
       - name: Install Kubeseal & Kubectl
    
