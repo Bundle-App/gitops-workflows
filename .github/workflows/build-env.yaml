@@ -5,7 +5,7 @@ on:
   workflow_call:
     inputs:
       BRANCH:
-        required: false
+        required: true
         type: string
       ENVIRONMENT:
         required: true
@@ -208,7 +208,7 @@ jobs:
         uses: Bundle-App/publish-to-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
-          BRANCH_NAME: ${{inputs.ENVIRONMENT}} #optional defaults to master
+          BRANCH_NAME: ${{inputs.BRANCH}} #optional defaults to master
 
 
         
