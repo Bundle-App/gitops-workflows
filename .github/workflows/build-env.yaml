@@ -7,6 +7,9 @@ on:
       ENVIRONMENT:
         required: true
         type: string
+      SERVICE_NAME:
+        required: true
+        type: string
 
       BUILD_SECRETS:
         required: true
