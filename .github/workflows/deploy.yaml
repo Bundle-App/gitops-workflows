@@ -224,7 +224,7 @@ jobs:
   build-image:
     
     needs: build-envs
-    uses: ./build-image.yaml@experimental
+    uses: Bundle-App/gitops-workflows/.github/workflows/build-image.yaml@experimental
 
     with:
     
