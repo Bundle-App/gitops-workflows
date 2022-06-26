@@ -56,6 +56,29 @@ jobs:
           ssm_parameter_list: ${{inputs.SSM_PARAMS}}
           prefix: PLAIN_
 
+
+
+      - name: aws-secrets-to-env
+        uses: Bundle-App/aws-ssm-to-env@master
+        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_EXPERIMENTAL }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_EXPERIMENTAL }}
+        with:
+          ssm_parameter_list: ${{inputs.SSM_SECRETS}}
+          prefix: SECRET_
+
+
+   
+      # - uses: ProcureAi/aws-ssm-secrets-multiple@v1.0.0
+      #   with:
+      #     SSM_PARAMETERS: ${{inputs.SSM_SECRETS}}
+
+      # - run: |
+      #     echo "this is your secret: $FOO"
+
+
       - name: Get AWS Parameter Store values
         uses: dkershner6/aws-ssm-getparameters-action@v1
         with:
