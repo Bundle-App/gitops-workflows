@@ -52,7 +52,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_PREFIX: "bundle"
-          ECR_REPOSITORY: ${{ inputs.EXAMPLE_SERVICE }}/staging #Replace this with your service name eg. blockchain-service
+          ECR_REPOSITORY: ${{ inputs.SERVICE_NAME }}/staging #Replace this with your service name eg. blockchain-service
           GITHUB_TOKEN: ${{secrets.GLOBAL_GITHUB_TOKEN}}
           ENV_SECRETS: ${{inputs.ENV_SECRETS}}
     
