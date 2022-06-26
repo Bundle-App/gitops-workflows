@@ -16,6 +16,9 @@ on:
       SERVICE_NAME:
         required: true
         type: string
+      BRANCH:
+        required: false
+        type: string
 
 
     outputs:

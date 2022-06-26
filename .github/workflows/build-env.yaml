@@ -4,6 +4,9 @@ env:
 on:
   workflow_call:
     inputs:
+      BRANCH:
+        required: false
+        type: string
       ENVIRONMENT:
         required: true
         type: string
