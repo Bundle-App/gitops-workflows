@@ -106,7 +106,7 @@ jobs:
           
             done
             plains=${plains::-1} ##remove last comma
-            plains="[${plains}]"
+            plains="{params:[${plains}]}" ### Convert to JSON Object
             
             
             echo "$plains"
@@ -135,7 +135,8 @@ jobs:
         if: ${{ inputs.BUILD_ENVS == 'yes' }}
         run: |
             ##
-            echo "${{steps.build-yaml.outputs.data}}"
+            rm -f plain.json
+            echo "${{steps.build-yaml.outputs.data}}" > params.yaml
 
       - name: Install Kubeseal & Kubectl
    
