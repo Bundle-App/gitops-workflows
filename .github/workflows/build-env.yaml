@@ -84,10 +84,6 @@ jobs:
           ssm_parameter_list: ${{inputs.SSM_SECRETS}}
           prefix: SECRET_
 
-
-   
-
-
       - name: Plain Env Variables
         if: ${{ inputs.BUILD_ENVS == 'yes' }}
         id: compose-envs
@@ -187,10 +183,6 @@ jobs:
              
           
             done
-
-
-
-
 
             #Cleanup files
 
