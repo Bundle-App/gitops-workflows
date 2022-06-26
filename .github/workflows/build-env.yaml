@@ -106,7 +106,7 @@ jobs:
           
             done
             plains=${plains::-1} ##remove last comma
-            plains="{params:[${plains}]}" ### Convert to JSON Object
+            plains="{"params":[${plains}]}" ### Convert to JSON Object
             
             
             echo "$plains"
