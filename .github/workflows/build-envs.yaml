@@ -56,7 +56,7 @@ jobs:
           ssm_parameter_list: ${{inputs.SSM_PARAMS}}
           prefix: PLAIN_
 
-      - name: aws-secrets-to-env
+        # - name: aws-secrets-to-env
         # uses: bomb-on/aws-ssm-to-env@master
         # if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         # env:
