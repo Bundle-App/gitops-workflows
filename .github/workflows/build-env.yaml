@@ -102,7 +102,7 @@ jobs:
 
           
             
-              plains="${plains}{\"name\":\"${KEY\",\"value\":\"${VALUE}\"},"  ## Build JSON array of plain keys and values
+              plains="${plains}{\"name\":\"${KEY}\",\"value\":\"${VALUE}\"},"  ## Build JSON array of plain keys and values
           
             done
             plains=${plains::-1} ##remove last comma
