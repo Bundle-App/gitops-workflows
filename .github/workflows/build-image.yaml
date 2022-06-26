@@ -5,7 +5,7 @@ on:
   workflow_call:
     inputs:
       BUILD_IMAGE:
-        required: false
+        required: true
         type: string
       BUILD_ARGS:
         required: false
