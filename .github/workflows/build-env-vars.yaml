@@ -106,7 +106,7 @@ jobs:
             done
 
             plains=${plains::-1} ##remove last comma
-            plains="{"params":[${plains}]}"
+            plains="{\"params\":[${plains}]}"
               
             echo "$plains"
             echo ::set-output name=PLAIN_ARRAY::$plains
