@@ -166,9 +166,10 @@ jobs:
               VALUE=${!var}
               k=${var:7}
 
-            
+             
               touch "$k"
-              KEY=$(echo "$k" | tr -d '[:space:]')
+              ##KEY=$(echo "$k" | tr -d '[:space:]')
+              KEY=`echo $k | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'` ## Remove spaces and non-alphanumeric characters
               #KEY="${KEY}-${git_hash}"
 
               echo -n "$VALUE" > "$KEY"
