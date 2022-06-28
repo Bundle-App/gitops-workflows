@@ -104,9 +104,9 @@ jobs:
               plains="${plains}{\"name\":\"${KEY}\",\"value\":\"${VALUE}\"},"  ## Build JSON array of plain keys and values
           
             done
-            
+
             plains=${plains::-1} ##remove last comma
-            plains="{"params":[${plains}]}" ### Convert to JSON Object
+            plains="{"params":[${plains}]}"
             
             
             echo "$plains"
@@ -119,7 +119,7 @@ jobs:
           PLAIN_ARRAY: ${{ steps.compose-envs.outputs.PLAIN_ARRAY }}
         run: |
             ##
-            echo "${PLAIN_ARRAY} " > plain.json
+            echo "${PLAIN_ARRAY}" > plain.json
       
       - name: Build yaml file
         if: ${{ inputs.BUILD_ENVS == 'yes' }}
