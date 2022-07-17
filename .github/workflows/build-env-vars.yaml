@@ -159,6 +159,7 @@ jobs:
         run: |
             #Get secrets from env 
 
+         
           
 
             compgen -A variable | grep SECRET > list.txt
