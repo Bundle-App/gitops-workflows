@@ -155,7 +155,7 @@ jobs:
         env:
           KUBESEAL_CERT: ${{ secrets.KUBESEAL_CERT }}
           SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
-          DEPLOYMENT_NAMESPACE: ${{ inputs.DEPLOYMENT_NAMESPACE }} || 'experimental'
+          DEPLOYMENT_NAMESPACE: ${{ inputs.DEPLOYMENT_NAMESPACE || 'experimental' }} 
         run: |
             #Get secrets from env 
 
