@@ -10,6 +10,9 @@ on:
       ENVIRONMENT:
         required: true
         type: string
+      DEPLOYMENT_NAMESPACE:
+        required: true
+        type: string
       SERVICE_NAME:
         required: true
         type: string
@@ -151,6 +154,8 @@ jobs:
         id: compose-secrets 
         env:
           KUBESEAL_CERT: ${{ secrets.KUBESEAL_CERT }}
+          SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
+          DEPLOYMENT_NAMESPACE: ${{ inputs.DEPLOYMENT_NAMESPACE }} || 'experimental'
         run: |
             #Get secrets from env 
 
@@ -159,10 +164,11 @@ jobs:
             echo -n  $KUBESEAL_CERT | base64 -d > cert.pem
             secrets=""
             YAMLS=""
-            
+            touch "secret-list.txt"
             #git_hash=$(git rev-parse --short "$GITHUB_SHA")
 
             #rm /charts/deploy/*.yaml  ## Remove any existing yaml files
+
             for var in "${!SECRET_@}";
             do
               VALUE=${!var}
@@ -170,22 +176,25 @@ jobs:
 
              
               touch "$k"
+              
               ##KEY=$(echo "$k" | tr -d '[:space:]')
               KEY=`echo $k | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'` ## Remove spaces and non-alphanumeric characters
               #KEY="${KEY}-${git_hash}"
 
               echo -n "$VALUE" > "$KEY"
 
-              #SECRET_YAML=$(kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml | base64 )
+             
 
           
-              kubectl create secret generic $KEY -n experimental --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
+              kubectl create secret generic $KEY -n $DEPLOYMENT_NAMESPACE --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
               rm -f "$KEY"
             
               secrets="${secrets}\"${KEY}\","  ## Build JSON array of secret keys
              
           
             done
+
+            
 
             #Cleanup files
 
