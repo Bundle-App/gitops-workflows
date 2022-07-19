@@ -166,14 +166,14 @@ jobs:
             then
               cert=$inputs.KUBESEAL_CERT_PROD
               echo "Using production cert"
-              exit 1
+             
             fi 
 
             if [[ "${{ inputs.ENVIRONMENT }}" = "staging" ]]; 
             then
               cert=$inputs.KUBESEAL_CERT
               echo "Using staging cert"
-              exit 1
+              
             fi 
 
          
