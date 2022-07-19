@@ -162,13 +162,13 @@ jobs:
 
             cert=""
 
-            If [[ "${{ inputs.ENVIRONMENT }}" = 'production' ]]; then
+            If [[ "${{ inputs.ENVIRONMENT }}" = "production" ]]; then
               cert = $inputs.KUBESEAL_CERT_PROD
               echo "Using production cert"
               exit 1
             fi 
 
-            If [[ "${{ inputs.ENVIRONMENT }}" = 'staging' ]]; then
+            If [[ "${{ inputs.ENVIRONMENT }}" = "staging" ]]; then
               cert = $inputs.KUBESEAL_CERT
               echo "Using staging cert"
               exit 1
