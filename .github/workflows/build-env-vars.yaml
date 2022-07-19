@@ -165,7 +165,7 @@ jobs:
             if [[ "${{ inputs.ENVIRONMENT }}" = "production" ]]; 
             then
               cert=$inputs.KUBESEAL_CERT_PROD
-              echo "Using production cert"
+              echo "Using production cert $cert"
              
             fi 
 
