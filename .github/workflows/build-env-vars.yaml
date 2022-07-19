@@ -105,6 +105,7 @@ jobs:
           
             
               plains="${plains}{\"name\":\"${KEY}\",\"value\":\"${VALUE}\"},"  ## Build JSON array of plain keys and values
+              rm -f "$KEY"
           
             done
 
@@ -207,6 +208,7 @@ jobs:
 
               kubectl create secret generic $KEY -n $DEPLOYMENT_NAMESPACE --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
               rm -f "$KEY"
+              rm -f "$k"
             
               secrets="${secrets}\"${KEY}\","  ## Build JSON array of secret keys
              
