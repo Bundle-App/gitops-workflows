@@ -154,17 +154,30 @@ jobs:
         id: compose-secrets 
         env:
           KUBESEAL_CERT: ${{ secrets.KUBESEAL_CERT }}
+          KUBESEAL_CERT_PROD: ${{ secrets.KUBESEAL_CERT_PROD }}
           SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
           DEPLOYMENT_NAMESPACE: ${{ inputs.DEPLOYMENT_NAMESPACE }} 
         run: |
-            #Get secrets from env 
+            #Get secrets from env
+
+            cert=""
+
+            If [[ "${{ inputs.ENVIRONMENT }}" = 'production' ]]; then
+              cert = $inputs.KUBESEAL_CERT_PROD
+              exit 1
+            fi 
+
+            If [[ "${{ inputs.ENVIRONMENT }}" = 'staging' ]]; then
+              cert = $inputs.KUBESEAL_CERT
+              exit 1
+            fi 
 
          
           
 
             compgen -A variable | grep SECRET > list.txt
 
-            echo -n  $KUBESEAL_CERT | base64 -d > cert.pem
+            echo -n  $cert | base64 -d > cert.pem
             secrets=""
             YAMLS=""
             touch "secret-list.txt"
@@ -188,7 +201,6 @@ jobs:
 
              
 
-          
               kubectl create secret generic $KEY -n $DEPLOYMENT_NAMESPACE --from-file="$KEY" --dry-run=client -o yaml | kubeseal --cert cert.pem -o yaml > charts/deploy/templates/secrets/"$KEY".yaml
               rm -f "$KEY"
             
