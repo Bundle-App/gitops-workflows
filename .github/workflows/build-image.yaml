@@ -58,7 +58,7 @@ jobs:
           GITHUB_OWNER: bundle-app
           ECR_REPOSITORY: ${{ inputs.SERVICE_NAME }} #Replace this with your service name eg. blockchain-service
           ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
-          GITHUB_TOKEN: ${{secrets.GLOBAL_GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GLOBAL_GITHUB_TOKEN_TEST}}
           ENV_SECRETS: ${{inputs.ENV_SECRETS}}
     
 
