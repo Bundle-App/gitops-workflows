@@ -60,6 +60,7 @@ jobs:
           ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
           GITHUB_TOKEN: ${{secrets.GLOBAL_GITHUB_TOKEN_TEST}}
           ENV_SECRETS: ${{inputs.ENV_SECRETS}}
+          GITHUB_PACKAGE_REPO: "bundle-app/api-specs"
     
 
         run: |
