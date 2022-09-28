@@ -141,16 +141,8 @@ jobs:
             rm -f plain.json
             echo "${{steps.build-yaml.outputs.data}}" > params.yaml
 
-      - name: Install Kubeseal & Kubectl
-   
-        if: ${{ inputs.BUILD_SECRETS == 'yes' }}
-        run: |
-            #Install kubeseal
-            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-            brew update
-            brew install kubeseal
-            brew install kubectl
-      
+
+            
       - name: Compose Secrets 
         if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         id: compose-secrets 
@@ -160,6 +152,12 @@ jobs:
           SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
           DEPLOYMENT_NAMESPACE: ${{ inputs.DEPLOYMENT_NAMESPACE }} 
         run: |
+            #Install kubeseal
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+            brew update
+            brew install kubeseal
+            brew install kubectl
+      
             #Get secrets from env
 
             cert="";
