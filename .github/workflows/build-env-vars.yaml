@@ -146,6 +146,7 @@ jobs:
         if: ${{ inputs.BUILD_SECRETS == 'yes' }}
         run: |
             #Install kubeseal
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
             brew update
             brew install kubeseal
             brew install kubectl
